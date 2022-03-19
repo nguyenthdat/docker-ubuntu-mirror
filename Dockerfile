@@ -6,5 +6,4 @@ RUN apk update && apk add bash
 WORKDIR /aptmirror
 COPY . .
 VOLUME ["/aptmirror"]
-CMD ["/bin/bash", "cnf.sh"]
 CMD ["/bin/bash", "entrypoint.sh"]

@@ -1,8 +1,5 @@
 version: '3'
 
-networks:
-  traefik_net:
-    external: true
 services:
   aptmirror:
     build: .
@@ -11,23 +8,16 @@ services:
     volumes:
       - aptmirror:/aptmirror
       - ./mirror.list:/etc/apt/mirror.list
-    labels:
-      - traefik.enable=false
+  
   web:
     image: nginx:1.17-alpine
     restart: unless-stopped
     volumes:
       - aptmirror:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    labels:
-      - traefik.http.routers.apt.rule=Host(`apt.nguyenthdat.com`)
-      - traefik.http.routers.apt.tls=true
-      - traefik.http.routers.apt.tls.certresolver=lets-encrypt
-      - traefik.port=80
-    networks:
-      - traefik_net
-    depends_on:
-      - aptmirror
+    ports:
+      - 127.0.0.1:80:80
+
 volumes:
   aptmirror:
 
